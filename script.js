@@ -1,3 +1,5 @@
+import {createTodoElement} from './todoModule.js';
+
 // 画面上の要素（ボタンや入力欄）をつかまえる
 const addButton = document.getElementById('add-button');
 const todoInput = document.getElementById('todo-input');
