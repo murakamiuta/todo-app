@@ -27,6 +27,26 @@ app.post('/api/todos', (req, res) => {
   res.json({ message: 'サーバーのファイルに保存したよ！', data: newTodo });
 });
 
+// --- //追加: サーバーのファイルからデータを消す窓口（DELETE） ---
+app.delete('/api/todos', (req, res) => {
+  const { task } = req.body; // フロントから「このタスクを消して」という名前が届く
+
+  if (fs.existsSync(DATA_FILE)) {
+    // 1. 今のファイルを読み込む
+    let todos = JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'));
+    
+    // 2. 届いたタスク名と「一致しないものだけ」を残す（＝特定のタスクを排除する）
+    const newTodos = todos.filter(todo => todo.task !== task);
+    
+    // 3. 削った後のデータをファイルに書き直す
+    fs.writeFileSync(DATA_FILE, JSON.stringify(newTodos, null, 2));
+  }
+
+  console.log('削除を実行しました:', task);
+  res.json({ message: 'サーバーから削除完了！' });
+});
+// --------------------------------------------------
+
 // --- //追加: 保存されている全データを返す窓口（GET） ---
 app.get('/api/todos', (req, res) => {
   let todos = [];
